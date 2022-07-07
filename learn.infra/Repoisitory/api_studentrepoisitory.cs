@@ -1,6 +1,7 @@
 ﻿using Dapper;
 using learn.core.Data;
 using learn.core.domain;
+using learn.core.DTO;
 using learn.core.Repoisitory;
 using learn.infra.domain;
 using System;
@@ -29,6 +30,14 @@ namespace learn.infra.Repoisitory
         {
             IEnumerable<api_student> result = dBContext.dbConnection.Query<api_student>
                 ("API_STUDENT_Package.GetAllStudent", commandType: CommandType.StoredProcedure);
+
+            return result.ToList();
+        }
+
+        public List<std_dto> getDetails()
+        {
+            IEnumerable<std_dto> result = dBContext.dbConnection.Query<std_dto>
+                ("API_STUDENT_Package.getDetails", commandType: CommandType.StoredProcedure);
 
             return result.ToList();
         }

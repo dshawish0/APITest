@@ -1,4 +1,5 @@
 ﻿using learn.core.Data;
+using learn.core.DTO;
 using learn.core.Repoisitory;
 using learn.core.Service;
 using System;
@@ -22,6 +23,11 @@ namespace learn.infra.Service
         public List<api_student> GetAllStudent()
         {
             return api_studentpoisitory.GetAllStudent();
+        }
+
+        public List<std_dto> getDetails()
+        {
+            return api_studentpoisitory.getDetails();
         }
 
         public bool InsertStudent(api_student std)

@@ -1,4 +1,5 @@
 ﻿using learn.core.Data;
+using learn.core.DTO;
 using learn.core.Service;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -31,6 +32,13 @@ namespace API.Controllers
         public string marks()
         {
             return StudentService.marks();
+        }
+
+        [HttpGet]
+        [Route("getDetails")]
+        public List<std_dto> getDetails()
+        {
+            return StudentService.getDetails();
         }
     }
 }

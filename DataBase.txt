@@ -1,0 +1,283 @@
+create table API_STUDENT
+(
+StudentId int GENERATED always as IDENTITY (start with 1 increment by 1) primary key,
+Fname VARCHAR(255),
+Lname VARCHAR(255),
+BirthDate DATE,
+StudentMark float
+);
+
+
+CREATE OR REPLACE PACKAGE API_STUDENT_Package AS
+PROCEDURE GetAllStudent;
+Procedure InsertStudent(FirstName in varchar, LastName in varchar, BOD in Date, SMark in float);
+Procedure UpdateStudent(STDId in int,FirstName in varchar, LastName in varchar, BOD in Date, SMark in float);
+Procedure DeleteStudent(STDId in int);
+Procedure getDetails;
+
+END API_STUDENT_Package;
+
+
+CREATE OR REPLACE PACKAGE  Body API_STUDENT_Package AS
+
+PROCEDURE GetAllStudent
+as
+c_all sys_refcursor;
+Begin
+open c_all for
+select * from API_STUDENT;
+DBMS_SQL.RETURN_RESULT(c_all);
+END GetAllStudent;
+
+PROCEDURE InsertStudent(FirstName in varchar, LastName in varchar, BOD in Date, SMark in float)
+IS
+BEGIN
+INSERT INTO API_STUDENT(Fname,Lname,BirthDate,StudentMark) 
+VALUES(FirstName, LastName, TO_DATE(BOD,'yyyy-mm-dd'), SMark);
+COMMIT;
+END InsertStudent;
+
+PROCEDURE UpdateStudent(STDId in int,FirstName in varchar, LastName in varchar, BOD in Date, SMark in float)
+IS
+BEGIN
+UPDATE API_STUDENT SET Fname=FirstName, Lname=LastName, BirthDate=BOD, StudentMark=SMark WHERE StudentId=STDId;
+COMMIT;
+END UpdateStudent;
+
+
+PROCEDURE DeleteStudent(STDId in int)
+IS
+BEGIN
+DELETE From API_STUDENT WHERE StudentId=STDId;
+COMMIT;
+END DeleteStudent;
+
+PROCEDURE getDetails
+as
+c_all sys_refcursor;
+Begin
+open c_all for
+select fname as "firstName",lname as "LastName", Studentmark as "markss", courseName as "CName",bookName as "BName" from api_student 
+        join api_studentcourse on api_studentcourse.studentID = api_student.studentID
+        join api_course on api_course.courseid = api_studentcourse.courseid
+        full outer join api_book on api_book.courseid = api_course.courseid;
+DBMS_SQL.RETURN_RESULT(c_all);
+END getDetails;
+
+END API_STUDENT_Package;
+
+
+create table API_COURSE
+(
+CourseId int GENERATED always as IDENTITY (start with 1 increment by 1) primary key,
+Coursename VARCHAR(255),
+Price float,
+StartDate DATE,
+EndDate DATE,
+ImagePath VARCHAR2(250)
+);
+
+CREATE OR REPLACE PACKAGE API_COURSE_Package AS
+PROCEDURE GetAllCourse;
+Procedure InsertCourse(CouName in varchar, Pprice in float, SDate in Date, EDate in Date,ImgPath in VARCHAR2);
+Procedure UpdateCourse(CID in int, CouName in varchar, Pprice in float, SDate in Date, EDate in Date,ImgPath in VARCHAR2);
+Procedure DeleteCourse(CID in int);
+
+END API_COURSE_Package;
+
+CREATE OR REPLACE PACKAGE  Body API_COURSE_Package AS
+
+PROCEDURE GetAllCourse
+as
+c_all sys_refcursor;
+Begin
+open c_all for
+select * from API_COURSE;
+DBMS_SQL.RETURN_RESULT(c_all);
+END GetAllCourse;
+
+PROCEDURE InsertCourse(CouName in varchar, Pprice in float, SDate in Date, EDate in Date,ImgPath in VARCHAR2)
+IS
+BEGIN
+INSERT INTO API_COURSE(Coursename, Price, StartDate, EndDate, ImagePath) 
+VALUES(CouName, Pprice, TO_DATE(SDate,'yyyy-mm-dd'), TO_DATE(EDate,'yyyy-mm-dd'), ImgPath);
+COMMIT;
+END InsertCourse;
+
+PROCEDURE UpdateCourse(CID in int, CouName in varchar, Pprice in float, SDate in Date, EDate in Date,ImgPath in VARCHAR2)
+IS
+BEGIN
+UPDATE API_COURSE SET Coursename=CouName, Price=Pprice, StartDate=SDate, EndDate=EDate, ImagePath=ImgPath WHERE CourseId=CID;
+COMMIT;
+END UpdateCourse;
+
+
+PROCEDURE DeleteCourse(CID in int)
+IS
+BEGIN
+DELETE From API_COURSE WHERE CourseId=CID;
+COMMIT;
+END DeleteCourse;
+
+
+END API_COURSE_Package;
+ 
+
+create table API_StudentCOURSE
+(
+StudentCourseId int GENERATED always as IDENTITY (start with 1 increment by 1) primary key,
+StudentId int,
+CourseId int,
+FOREIGN KEY(StudentId)references API_STUDENT(StudentId) ON DELETE CASCADE,
+FOREIGN KEY(CourseId)references API_COURSE(CourseId) ON DELETE CASCADE
+);
+
+create table API_BOOK
+(
+BookId int GENERATED always as IDENTITY (start with 1 increment by 1) primary key,
+Bookname VARCHAR(255),
+Price float,
+PublishedDate DATE,
+EndDate DATE,
+CourseId int,
+FOREIGN KEY(CourseId)references API_COURSE(CourseId) ON DELETE CASCADE
+);
+
+
+create table API_LOGIN
+(
+LOGINId int GENERATED always as IDENTITY (start with 1 increment by 1) primary key,
+UserName VARCHAR(255) UNIQUE,
+Password float,
+LogInType int,
+RoleName VARCHAR(255)
+);
+
+
+create table API_TEACHER
+(
+TeacherId int GENERATED always as IDENTITY (start with 1 increment by 1) primary key,
+TeacherName VARCHAR(255),
+Email VARCHAR(255),
+Salary float,
+PhoneNumber VARCHAR(255),
+LOGINId int,
+FOREIGN KEY(LOGINId)references API_LOGIN(LOGINId) ON DELETE CASCADE
+);
+
+create table API_TEACHERCOURSE
+(
+TeacherCourseId int GENERATED always as IDENTITY (start with 1 increment by 1) primary key,
+TeacherId int,
+CourseId int,
+FOREIGN KEY(TeacherId)references API_TEACHER(TeacherId) ON DELETE CASCADE,
+FOREIGN KEY(CourseId)references API_COURSE(CourseId) ON DELETE CASCADE
+);
+DELETE From API_COURSE WHERE CourseId=3;
+select *from API_COURSE
+commit
+
+select *from API_Student
+
+INSERT INTO API_STUDENT(Fname,Lname,BirthDate,StudentMark) 
+VALUES('bb', 'bb', TO_DATE('2001-06-16','yyyy-mm-dd'), 100);
+
+select *from API_Studentcourse
+INSERT INTO API_Studentcourse(studentid,courseid) 
+VALUES(2,5);
+
+COMMIT;
+
+select * from Api_book
+
+CREATE OR REPLACE PACKAGE API_BOOK_Package AS
+PROCEDURE GetAllBook;
+Procedure InsertBook(BName in varchar, Pprice in float, PED in Date, EndD in Date, CID in int);
+Procedure UpdateBook(BkId in int, BName in varchar, Pprice in float, PED in Date, EndD in Date, CID in int);
+Procedure DeleteBook(BkId in int);
+END API_BOOK_Package;
+
+CREATE OR REPLACE PACKAGE  Body API_BOOK_Package AS
+
+PROCEDURE GetAllBook
+as
+c_all sys_refcursor;
+Begin
+open c_all for
+select * from API_BOOK;
+DBMS_SQL.RETURN_RESULT(c_all);
+END GetAllBook;
+
+PROCEDURE InsertBook(BName in varchar, Pprice in float, PED in Date, EndD in Date, CID in int)
+IS
+BEGIN
+INSERT INTO API_BOOK(BOOKNAME, PRICE, PUBLISHEDDATE, ENDDATE, COURSEID) 
+VALUES(BName, Pprice, TO_DATE(PED,'yyyy-mm-dd'), TO_DATE(EndD,'yyyy-mm-dd'), CID);
+COMMIT;
+END InsertBook;
+
+Procedure UpdateBook(BkId in int, BName in varchar, Pprice in float, PED in Date, EndD in Date, CID in int)
+IS
+BEGIN
+UPDATE API_BOOK SET BOOKNAME=BName, Price=Pprice, PUBLISHEDDATE=PED, ENDDATE=EndD, COURSEID=CID WHERE BOOKID=BkId;
+COMMIT;
+END UpdateBook;
+
+
+PROCEDURE DeleteBook(BkId in int)
+IS
+BEGIN
+DELETE From API_BOOK WHERE BOOKID=BkId;
+COMMIT;
+END DeleteBook;
+
+
+END API_BOOK_Package;
+
+CREATE OR REPLACE PACKAGE API_BookCRUD_Package AS
+Procedure bookCRUD(crud in varchar,BkId in int default null, BName in varchar default null, Pprice in float default null, 
+PED in Date default null, EndD in Date default null, CID in int default null);
+end API_BookCRUD_Package;
+
+CREATE OR REPLACE PACKAGE  Body API_BookCRUD_Package AS
+
+
+Procedure bookCRUD(crud in varchar, BkId in int default null, BName in varchar default null, Pprice in float default null, 
+PED in Date default null, EndD in Date default null, CID in int default null)
+
+as 
+c_all sys_refcursor;
+
+begin 
+
+if crud ='C' then
+    INSERT INTO API_BOOK(BOOKNAME, PRICE, PUBLISHEDDATE, ENDDATE, COURSEID) 
+    VALUES(BName, Pprice, TO_DATE(PED,'yyyy-mm-dd'), TO_DATE(EndD,'yyyy-mm-dd'), CID);
+    COMMIT;
+
+elsif crud='U' then
+    UPDATE API_BOOK SET BOOKNAME=BName, Price=Pprice, PUBLISHEDDATE=PED, ENDDATE=EndD, COURSEID=CID WHERE BOOKID=BkId;
+    COMMIT;
+    
+elsif crud = 'D' then
+    DELETE From API_BOOK WHERE BOOKID=BkId;
+    COMMIT;
+    
+elsif crud = 'G'  then
+    open c_all for
+    select * from API_BOOK;
+    DBMS_SQL.RETURN_RESULT(c_all);
+
+end if; 
+end bookCRUD;
+
+end API_BookCRUD_Package;
+
+select * from api_book
+select * from api_student
+select * from api_course
+
+select fname,lname, Studentmark, courseName,bookName from api_student 
+        join api_studentcourse on api_studentcourse.studentID = api_student.studentID
+        join api_course on api_course.courseid = api_studentcourse.courseid
+        full outer join api_book on api_book.courseid = api_course.courseid

@@ -1,4 +1,5 @@
 ﻿using learn.core.Data;
+using learn.core.DTO;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -13,5 +14,7 @@ namespace learn.core.Service
         public bool UpdateStudent(api_student std);
 
         public string marks();
+
+        public List<std_dto> getDetails();
     }
 }
