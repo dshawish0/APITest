@@ -1,0 +1,8 @@
+IActionResult is an interface and ActionResult is an implementation of that interface.
+
+ActionResults is an abstract class and action results like ViewResult, PartialViewResult, JsonResult, etc., derive from ActionResult.
+
+Let's say you want to create an action result not catered to by MVC, say an XML result.
+
+IActionResult is an interface, we can create a custom response as a return, when you use ActionResult you can return only predefined ones for returning a View or a resource. 
+With IActionResult we can return a response, or error as well. On the other hand, ActionResult is an abstract class, and you would need to make a custom class that inherits.

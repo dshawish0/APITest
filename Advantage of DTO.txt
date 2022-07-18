@@ -1,0 +1,3 @@
+DTO, stands for Data Transfer Object, is a design pattern conceived to reduce the number of calls when working with remote interfaces.
+The advantage of using DTOs, is that they can help hiding implementation details of domain objects (aka. entities). Exposing entities through 
+endpoints can become a security issue if we do not carefully handle what properties can be changed through what operations.

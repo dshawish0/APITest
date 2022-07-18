@@ -11,7 +11,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "learn.core", "learn.core\le
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{7F3342A6-54A8-4FEC-BB2E-FFAEB2A4FD41}"
 	ProjectSection(SolutionItems) = preProject
+		AddScoped().txt = AddScoped().txt
+		Advantage of DTO.txt = Advantage of DTO.txt
+		Advantages of Onion Architecture.txt = Advantages of Onion Architecture.txt
 		DataBase.txt = DataBase.txt
+		DataBaseForAggs.txt = DataBaseForAggs.txt
+		difference between DTO and Service.txt = difference between DTO and Service.txt
+		HTTP response status.txt = HTTP response status.txt
+		IActionResult Vs ActionResult.txt = IActionResult Vs ActionResult.txt
+		What is Data Shaping.txt = What is Data Shaping.txt
 	EndProjectSection
 EndProject
 Global

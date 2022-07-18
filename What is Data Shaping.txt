@@ -1,0 +1,12 @@
+What is Data Shaping
+Data shaping is a great way to reduce the amount of traffic sent from the API to the client. 
+It enables the consumer of the API to select (shape) the data by choosing the fields through the query string.
+
+What we mean by this is something like:
+https://localhost:5001/api/owner?fields=name,dateOfBirth
+
+This would tell the API to return a list of owners with ONLY the Name and DateOfBirth fields of the owner entity. 
+In our case, the owner entity doesn’t have too many fields to choose from, but you can see how this can be very helpful when an entity has a lot of fields in it. It’s not that uncommon.
+
+By giving the consumer a way to select just the fields it needs, we can potentially reduce the stress on the API. 
+On the other hand, this is not something that every API needs, so we need to think carefully and decide whether we should implement its implementation has a bit of reflection going on.

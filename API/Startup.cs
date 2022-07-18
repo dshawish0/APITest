@@ -40,8 +40,15 @@ namespace API
             services.AddScoped<IStudent, api_studentrepoisitory>();
 
 
+            services.AddScoped<ITask, api_taskrepoisitory>();
+            services.AddScoped<ITaskService, TaskService>();
+
+            services.AddScoped<IEmp, api_emprepoisitory>();
+            services.AddScoped<IEmpService, EmpService>();
+
             services.AddScoped<IBookService, BookService>();
             services.AddScoped<IBook, api_bookrepoisitory>();
+
             services.AddControllers();
         }
 

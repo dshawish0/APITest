@@ -1,0 +1,221 @@
+create table API_emp
+(
+empId int GENERATED always as IDENTITY (start with 1 increment by 1) primary key,
+Fname VARCHAR(255),
+Lname VARCHAR(255),
+salary float,
+depId int,
+FOREIGN KEY(depId)references API_dep(depId) ON DELETE CASCADE
+);
+
+create table API_task
+(
+taskId int GENERATED always as IDENTITY (start with 1 increment by 1) primary key,
+taskName  VARCHAR(255),
+empId int,
+FOREIGN KEY(empId)references API_emp(empId) ON DELETE CASCADE
+)
+
+create table API_attendance
+(
+checkIn date,
+checkOut date,
+empid int,
+FOREIGN KEY(empid)references API_emp(empId) ON DELETE CASCADE
+);
+
+CREATE OR REPLACE PACKAGE API_empCRUD_Package AS
+Procedure empCRUD(
+crud in varchar default null,
+eempId in int default null, 
+FFname in varchar default null, 
+LLname in varchar default null,
+ssalary in float default null, 
+eemail in varchar default null,
+ddepId in int default null);
+PROCEDURE GetDto;
+PROCEDURE numOfEmpInEachDep;
+end API_empCRUD_Package;
+
+CREATE OR REPLACE PACKAGE  Body API_empCRUD_Package AS
+
+PROCEDURE numOfEmpInEachDep
+as
+c_all sys_refcursor;
+Begin
+open c_all for
+SELECT DEPNAME as "DEPNAMEE",COUNT(*) as "numberOfEmppp"
+FROM api_emp join api_dep on api_dep.depid = api_emp.depid
+GROUP BY DEPNAME;
+DBMS_SQL.RETURN_RESULT(c_all);
+END numOfEmpInEachDep;
+
+PROCEDURE GetDto
+as
+c_all sys_refcursor;
+Begin
+open c_all for
+select Fname as "Fname",Lname as "Lname", salary as "salary", DEPNAME as "DEPNAME" from api_emp
+        join api_dep on api_dep.depid = api_emp.depid;
+DBMS_SQL.RETURN_RESULT(c_all);
+END GetDto;
+
+Procedure empCRUD(
+crud in varchar default null,
+eempId in int default null, 
+FFname in varchar default null, 
+LLname in varchar default null,
+ssalary in float default null, 
+eemail in varchar default null,
+ddepId in int default null)
+
+as 
+c_all sys_refcursor;
+
+begin 
+
+if crud ='Cre' then
+    INSERT INTO API_emp(Fname, Lname, salary, depId,email) 
+    VALUES(FFname, LLname, ssalary, ddepId,eemail);
+    COMMIT;
+
+elsif crud='Upd' then
+    UPDATE API_emp SET Fname=FFname, Lname=LLname, salary=ssalary, depId=ddepId, email=eemail WHERE empId=eempId;
+    COMMIT;
+    
+elsif crud = 'Del' then
+    DELETE From API_emp WHERE empId=eempId;
+    COMMIT;
+    
+elsif crud = 'Get'  then
+    open c_all for
+    select * from API_emp;
+    DBMS_SQL.RETURN_RESULT(c_all);
+    
+else
+    open c_all for
+    select * from API_emp;
+    DBMS_SQL.RETURN_RESULT(c_all);
+    
+end if; 
+end empCRUD;
+
+end API_empCRUD_Package;
+
+
+insert into api_Dep (DEPNAME) VALUES ('aaa');
+select * from api_dep
+
+INSERT INTO API_emp(Fname, Lname, salary, depId) 
+    VALUES('yousef', 'amjad', 2500, 1);
+    
+INSERT INTO API_emp(Fname, Lname, salary, depId) 
+    VALUES('aaa', 'bbb', 2222, 1);
+    
+commit
+
+select * from API_emp;
+
+ALTER TABLE API_emp
+ADD email VARCHAR(225);
+
+
+CREATE OR REPLACE PACKAGE API_TaskCRUD_Package AS
+PROCEDURE empTaskDto;
+PROCEDURE numOfTaskEechEmp;
+procedure getTaskById(ttaskId in int);
+Procedure taskCRUD(
+crud in varchar default null,
+ttaskId in int default null, 
+ttaskName in varchar default null, 
+eempId in int default null);
+end API_TaskCRUD_Package;
+
+
+
+CREATE OR REPLACE PACKAGE  Body API_TaskCRUD_Package AS
+
+PROCEDURE numOfTaskEechEmp
+as
+c_all sys_refcursor;
+Begin
+open c_all for
+SELECT Fname as "Fname", Lname as "Lname",COUNT(*) as "numberOfTasks"
+FROM api_emp join api_Task on api_task.empid = api_emp.empid
+GROUP BY Fname,Lname;
+DBMS_SQL.RETURN_RESULT(c_all);
+END numOfTaskEechEmp;
+
+procedure getTaskById(ttaskId in int)
+as
+c_all sys_refcursor;
+begin
+open c_all for
+select * from api_task where taskId=ttaskId;
+dbms_sql.return_result(c_all);
+
+end getTaskById;
+
+PROCEDURE empTaskDto
+as
+c_all sys_refcursor;
+Begin
+open c_all for
+select Fname as "Fname",Lname as "Lname", taskName as "taskName" from api_emp
+        join api_task on api_task.empid = api_emp.empid;
+DBMS_SQL.RETURN_RESULT(c_all);
+END empTaskDto;
+
+Procedure taskCRUD(
+crud in varchar default null,
+ttaskId in int default null, 
+ttaskName in varchar default null, 
+eempId in int default null)
+
+as 
+c_all sys_refcursor;
+
+begin 
+
+if crud ='Cre' then
+    INSERT INTO API_task(taskName, empId) 
+    VALUES(ttaskName, eempId);
+    COMMIT;
+
+elsif crud='Upd' then
+    UPDATE API_task SET taskName=ttaskName, empId=eempId WHERE taskId=ttaskId;
+    COMMIT;
+    
+elsif crud = 'Del' then
+    DELETE From API_task WHERE taskId=ttaskId;
+    COMMIT;
+    
+elsif crud = 'Get'  then
+    open c_all for
+    select * from API_task;
+    DBMS_SQL.RETURN_RESULT(c_all);
+        
+end if; 
+end taskCRUD;
+
+end API_TaskCRUD_Package;
+
+ INSERT INTO API_task(taskName, empId) 
+    VALUES(ttaskName, eempId);
+    COMMIT;
+    
+    select Fname as "Fname",Lname as "Lname", salary as "salary", DEPNAME as "DEPNAME" from api_emp
+        join api_dep on api_dep.depid = api_emp.depid;
+        
+SELECT DEPNAME as "DEPNAME", COUNT(*)
+FROM api_emp join api_dep on api_dep.depid = api_emp.depid
+GROUP BY DEPNAME;
+
+select * from api_emp
+
+insert into api_dep (DEPNAME) values ('bb');
+commit
+
+SELECT Fname as "Fname", Lname as "Lname",COUNT(*) as "numberOfTasks"
+FROM api_emp join api_Task on api_task.empid = api_emp.empid
+GROUP BY Fname,Lname;
