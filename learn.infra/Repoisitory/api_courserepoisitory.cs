@@ -3,7 +3,6 @@ using learn.core.Data;
 using learn.core.domain;
 using learn.core.Repoisitory;
 using learn.infra.domain;
-using Lw.Data.Entity;
 using System;
 using System.Collections.Generic;
 using System.Data;

@@ -10,12 +10,15 @@ using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace API
 {
@@ -48,6 +51,31 @@ namespace API
 
             services.AddScoped<IBookService, BookService>();
             services.AddScoped<IBook, api_bookrepoisitory>();
+
+            services.AddScoped<IAuthentication, Authentication>();
+            services.AddScoped<IAuthenticationService, AuthenticationService>();
+
+            services.AddAuthentication(x =>
+            {
+                x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            }
+
+           ).AddJwtBearer(y =>
+           {
+               y.RequireHttpsMetadata = false;
+               y.SaveToken = true;
+               y.TokenValidationParameters = new TokenValidationParameters
+               {
+                   ValidateIssuerSigningKey = true,
+                   IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes("[SECRET Used To Sign And Verify Jwt Token,It can be any string]")),
+                   ValidateIssuer = false,
+                   ValidateAudience = false,
+
+               };
+
+
+           });
 
             services.AddControllers();
         }
