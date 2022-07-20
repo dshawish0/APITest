@@ -10,5 +10,6 @@ namespace learn.core.Data
         public string userName { get; set; }
         public string Ppassword { get; set; }
         public string roleNmae { get; set; }
+        public string verificationCode { get; set; }
     }
 }

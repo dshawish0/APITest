@@ -30,5 +30,20 @@ namespace learn.infra.Repoisitory
                  ("api_loginAuth_package.Auth", parameter, commandType: CommandType.StoredProcedure);
             return result.FirstOrDefault();
         }
+
+        public void UpdateVerificationCode(api_loginAuth api_LoginAuth)
+        {
+            var parameter = new DynamicParameters();
+            parameter.Add
+                ("LLoginId", api_LoginAuth.LoginId, dbType: DbType.Int32, direction: ParameterDirection.Input);
+            parameter.Add
+                ("vverificationCode", api_LoginAuth.verificationCode.ToString(), dbType: DbType.String, direction: ParameterDirection.Input);
+
+                dBContext.dbConnection.ExecuteAsync
+                 ("api_loginAuth_package.UpdateVerificationCode", parameter, commandType: CommandType.StoredProcedure);
+
+            
+
+        }
     }
 }
