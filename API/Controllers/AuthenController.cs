@@ -34,14 +34,17 @@ namespace API.Controllers
             }
         }
 
-        [HttpPost]
+        [HttpGet]
         [Route("verificationCode/{code}")]
         public IActionResult verificationCode(string code)
         {
             if(Global.api_LoginAuth != null)
             {
-                if (Global.api_LoginAuth.verificationCode.ToString().Equals(code))
-                    return Ok("verificationCode Successful");
+                if (Global.api_LoginAuth.verificationCode != null)
+                {
+                    if (Global.api_LoginAuth.verificationCode.ToString().Equals(code))
+                        return Ok("verificationCode Successful");
+                }
                 return Ok("verificationCode Invalid");
             }
             return Ok("no login request");

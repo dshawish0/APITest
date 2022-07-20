@@ -36,8 +36,17 @@ namespace learn.infra.Repoisitory
             var parameter = new DynamicParameters();
             parameter.Add
                 ("LLoginId", api_LoginAuth.LoginId, dbType: DbType.Int32, direction: ParameterDirection.Input);
-            parameter.Add
-                ("vverificationCode", api_LoginAuth.verificationCode.ToString(), dbType: DbType.String, direction: ParameterDirection.Input);
+
+            if (api_LoginAuth.verificationCode != null)
+            {
+                parameter.Add
+                    ("vverificationCode", api_LoginAuth.verificationCode.ToString(), dbType: DbType.String, direction: ParameterDirection.Input);
+            }
+            else
+            {
+                parameter.Add
+                    ("vverificationCode", null, dbType: DbType.String, direction: ParameterDirection.Input);
+            }
 
                 dBContext.dbConnection.ExecuteAsync
                  ("api_loginAuth_package.UpdateVerificationCode", parameter, commandType: CommandType.StoredProcedure);

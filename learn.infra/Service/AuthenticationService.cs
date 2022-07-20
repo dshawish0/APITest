@@ -1,4 +1,5 @@
-﻿using learn.core.Data;
+﻿using API;
+using learn.core.Data;
 using learn.core.Repoisitory;
 using learn.core.Service;
 using MailKit.Net.Smtp;
@@ -7,8 +8,11 @@ using MimeKit;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
+using System.Runtime.CompilerServices;
 using System.Security.Claims;
 using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace learn.infra.Service
 {
@@ -55,6 +59,15 @@ namespace learn.infra.Service
             authentication.UpdateVerificationCode(result);
             UpdateVerificationCode(result);
 
+
+            Thread thread = new Thread(thr);
+            thread.Start();
+
+            //Thread.Sleep(20000);
+            //Task.Delay(20000);
+
+            //authentication.UpdateVerificationCode(Global.api_LoginAuth);
+
             return tokenHandeler.WriteToken(generateToken);
         }
 
@@ -68,6 +81,9 @@ namespace learn.infra.Service
             obj.To.Add(emailto);
             obj.Subject = "verificationCode";
             BodyBuilder bb = new BodyBuilder();
+            //onclick="window.location.href='https://w3docs.com';">
+            //bb.HtmlBody = "<html>" + "<button window.location.href="+"'"+"https://localhost:44353/api/Authen/verificationCode/" + api_LoginAuth.verificationCode+"';"+">"+ 
+            //    "verificationCode" + "</button>" + "</html>";
             bb.HtmlBody = "<html>" + "<h1>" + api_LoginAuth.verificationCode + "</h1>" + "</html>";
             obj.Body = bb.ToMessageBody();
 
@@ -78,6 +94,17 @@ namespace learn.infra.Service
 
             emailClinet.Disconnect(true);
             emailClinet.Dispose();
+        }
+
+
+        [MethodImpl(MethodImplOptions.Synchronized)]
+        void thr()
+        {
+            Thread.Sleep(20000);
+            Task.Delay(20000);
+            Global.api_LoginAuth.verificationCode = null;
+
+            authentication.UpdateVerificationCode(Global.api_LoginAuth);
         }
     }
 }
