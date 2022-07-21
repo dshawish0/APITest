@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -94,5 +95,23 @@ namespace API.Controllers
         {
             return courseService.filter(c);
         }
+
+        [HttpPost]
+        public api_course course()
+        {
+            var img = Request.Form.Files[0];
+            var imgNmae = Guid.NewGuid() + "_" + img.FileName;
+            var fullPath = Path.Combine("add file saved img like c\\dad\\sdad\\");
+
+            using (var stream = new FileStream(fullPath, FileMode.Create))
+            {
+                img.CopyTo(stream);
+            }
+            api_course course = new api_course();
+            course.ImagePath = imgNmae;
+
+            return course;
+        }
+
     }
 }
